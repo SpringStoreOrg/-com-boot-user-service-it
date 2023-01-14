@@ -17,13 +17,17 @@ jobs:
           name: API Tests Build Job
           command: mvn test
       - run:
-          name: Create Test reports folder
-          command: mkdir -p $CIRCLE_TEST_REPORTS/api/
-      - run:
-          name: Save Test reports
-          command: find . -type f -regex ".*/target/surefire-reports/testng-results.xml" -exec cp {} $CIRCLE_TEST_REPORTS/api/ \;
+          name: Save test results
+          command: |
+            mkdir -p ~/testng/results/
+            find . -type f -regex "./test-output/emailable-report.html" -exec cp {} ~/testng/results/ \;
+          when: always
       - store_test_results:
-          path: /tmp/circleci-test-results/api
+          path: ~/testng/results/
+      - store_artifacts:
+          path: ~/testng/results/
+      - store_artifacts:
+          path:  testng/results/       
 workflows:
   mvn-build-and-test:
     jobs:
