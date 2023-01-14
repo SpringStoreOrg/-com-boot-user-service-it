@@ -73,7 +73,7 @@ public class UserIT {
                 .then()
                 .assertThat().body("firstName", is("test_firstName"))
                 .and().body("lastName", is("test_lastName"))
-                .and().body("phoneNumber", is("0742000000"))
+                .and().body("phoneNumber", is("0742000001"))
                 .and().body("deliveryAddress", is("street, no. 1"))
                 .and().statusCode(201);
     }
