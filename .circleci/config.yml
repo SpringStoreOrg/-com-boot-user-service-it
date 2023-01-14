@@ -1,0 +1,30 @@
+version: 2.1
+
+jobs:
+  build-and-test:
+    environment:
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      - run:
+          name: Build
+          command: mvn -B -DskipTests clean package
+      # Then run your tests!
+      - run:
+          name: API Tests Build Job
+          command: mvn test
+      - run:
+          name: Create Test reports folder
+          command: mkdir -p $CIRCLE_TEST_REPORTS/api/    
+      - run:
+          name: Save Test reports
+          command: find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/api/ \;
+      - store_test_results:
+          path: /tmp/circleci-test-results/api     
+workflows:
+  mvn-build-and-test:
+    jobs:
+      - build-and-test
