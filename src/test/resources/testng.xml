@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="User Suite">
-    <test name="testGetUserByEmail">
+    <test name="testUser">
         <parameter name="email"
                    value="jellofirsthand@gaa1iler.site"/>
+        <parameter name="password"
+                   value="qqqqq111"/>
         <classes>
             <class name="user.UserIT"/>
         </classes>
