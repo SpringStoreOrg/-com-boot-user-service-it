@@ -8,6 +8,7 @@ import org.testng.annotations.*;
 import utility.ConfigFileReader;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
 public class UserIT {
@@ -60,6 +61,29 @@ public class UserIT {
     }
 
     @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
+    void testUpdateUserByEmail() {
+
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("firstName", "updated_firstName");
+        jsonObj.addProperty("lastName", "updated_lastName");
+        jsonObj.addProperty("phoneNumber", "0742000002");
+        jsonObj.addProperty("deliveryAddress", "street, no. 2");
+
+        given().header("Authorization", token)
+                .header("Content-Type", "application/json")
+                .pathParam("email", email)
+                .body(jsonObj.toString())
+                .when()
+                .put("{email}")
+                .then()
+                .assertThat().body("firstName", is("updated_firstName"))
+                .and().body("lastName", is("updated_lastName"))
+                .and().body("phoneNumber", is("0742000002"))
+                .and().body("deliveryAddress", is("street, no. 2"))
+                .and().statusCode(200);
+    }
+
+    @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
     void testGetUserByEmail() {
 
         given().header("Authorization", token)
@@ -68,6 +92,14 @@ public class UserIT {
                 .then().assertThat().statusCode(200);
     }
 
+    @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
+    void testGetAllUsers() {
+
+        given().header("Authorization", token)
+                .when().get("/users")
+                .then().assertThat().statusCode(200)
+                .and().body("size()", greaterThan(3));
+    }
 
     @Test(dependsOnMethods = {"testAddUser"}, priority = 3)
     void testDeleteUserByEmail() {
