@@ -14,43 +14,32 @@ public class UserIT {
 
     static ConfigFileReader configReader = new ConfigFileReader();
 
-    static String token;
+    private static String token;
 
-    static String userEmail;
+    private static String email;
 
     @BeforeClass
-    @Parameters({"email", "password"})
-    static void setUp(String email, String password) {
-
+    static void setUp() {
         //Set up the base URI
         RestAssured.baseURI = configReader.getBaseUrlUser();
 
-        JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("email", email);
-        jsonObj.addProperty("password", password);
-
-        //Create a new token based on the email and password of an existing user
-        token = given().
-                contentType(ContentType.JSON)
-                .header("Content-Type", "application/json")
-                .body(jsonObj.toString()).when().post(configReader.getBaseUrlLogin())
-                .then().statusCode(200).extract().header("Authorization");
     }
 
 
-   @Test(priority=1)
+    @Test(priority = 1)
     void testAddUser() {
-
-       userEmail = generateEmail();
+        //generate random email when creating a new user
+        email = generateEmail();
 
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("firstName", "test_firstName");
         jsonObj.addProperty("lastName", "test_lastName");
         jsonObj.addProperty("password", "qwerty1234");
         jsonObj.addProperty("phoneNumber", "0742000000");
-        jsonObj.addProperty("email", userEmail);
+        jsonObj.addProperty("email", email);
         jsonObj.addProperty("deliveryAddress", "street, no. 1");
 
+        //create a new user
         given().contentType(ContentType.JSON)
                 .body(jsonObj.toString())
                 .when()
@@ -61,11 +50,17 @@ public class UserIT {
                 .and().body("phoneNumber", is("0742000000"))
                 .and().body("deliveryAddress", is("street, no. 1"))
                 .and().statusCode(201);
+
+        //generate login token for the next tests
+        token = given().
+                contentType(ContentType.JSON)
+                .header("Content-Type", "application/json")
+                .body(jsonObj.toString()).when().post(configReader.getBaseUrlLogin())
+                .then().statusCode(200).extract().header("Authorization");
     }
 
-    @Test
-    @Parameters({"email"})
-    void testGetUserByEmail(String email) {
+    @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
+    void testGetUserByEmail() {
 
         given().header("Authorization", token)
                 .queryParam("email", email)
@@ -74,20 +69,20 @@ public class UserIT {
     }
 
 
-    @Test(priority=2)
-    void testDeleteUserByEmail(){
+    @Test(dependsOnMethods = {"testAddUser"}, priority = 3)
+    void testDeleteUserByEmail() {
 
         given().contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .header("Content-Type", "application/json")
-                .pathParam("email", userEmail)
+                .pathParam("email", email)
                 .when()
-                .delete( "{email}")
+                .delete("{email}")
                 .then()
                 .assertThat().statusCode(200);
     }
 
     private static String generateEmail() {
-        return  RandomStringUtils.randomAlphanumeric(25) + "@springstore-test.com";
+        return RandomStringUtils.randomAlphanumeric(25) + "@springstore-test.com";
     }
 }
