@@ -35,6 +35,14 @@ public class ConfigFileReader {
             throw new RuntimeException("url not specified in the Configuration.properties file.");
     }
 
+    public String getBaseUrlUserFavorites() {
+        String url = properties.getProperty("BASE_URL_USER_FAVORITES");
+        if (url != null)
+            return url;
+        else
+            throw new RuntimeException("url not specified in the Configuration.properties file.");
+    }
+
     public String getBaseUrlLogin() {
         String url = properties.getProperty("BASE_URL_LOGIN");
         if (url != null)

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="User Suite">
-    <test name="testUser">
+    <test name="User">
         <classes>
             <class name="user.UserIT"/>
+        </classes>
+    </test>
+    <test name="User Favorites">
+        <classes>
+            <class name="user.UserFavoriteIT"/>
         </classes>
     </test>
 </suite>
