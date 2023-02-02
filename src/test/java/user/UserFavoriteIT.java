@@ -10,8 +10,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import utility.ConfigFileReader;
 
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 public class UserFavoriteIT {
 
@@ -23,6 +25,15 @@ public class UserFavoriteIT {
 
     private static long userId;
 
+    public static String YELLOW_CORE_WOOD_CHAIR = "Yellow core wood chair";
+
+    public static String RED_CORE_WOOD_CHAIR = "Red core wood chair";
+
+    public static String BLUE_CORE_WOOD_CHAIR = "Blue core wood chair";
+
+    public static String ORANGE_CORE_WOOD_CHAIR = "Orange core wood chair";
+
+
     @BeforeClass
     static void setUp() {
         //Set up the base URI
@@ -32,18 +43,56 @@ public class UserFavoriteIT {
         createNewUser();
     }
 
-    @Test
+    @Test(priority = 1)
     void addProductToUserFavorites() {
 
         given().header("Authorization", token)
                 .header("userId", userId)
-                .pathParam("productName", "Yellow core wood chair")
+                .pathParam("productName", YELLOW_CORE_WOOD_CHAIR)
                 .when()
                 .post("{productName}")
                 .then()
-                .body("[0].name", is("Yellow core wood chair"))
+                .body("[0].name", is(YELLOW_CORE_WOOD_CHAIR))
                 .and().statusCode(200);
+    }
 
+    @Test(priority = 2)
+    void addProductsToUserFavorites() {
+
+        List<String> productNames = List.of(RED_CORE_WOOD_CHAIR, BLUE_CORE_WOOD_CHAIR, ORANGE_CORE_WOOD_CHAIR);
+
+        given().contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .header("userId", userId)
+                .body(productNames)
+                .when()
+                .put()
+                .then().assertThat().statusCode(200)
+                .and().body("$", hasSize(greaterThan(2)));
+    }
+
+    @Test(dependsOnMethods = {"addProductToUserFavorites"}, priority = 3)
+    void removeProductFromUserFavorites() {
+
+        given().contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .header("userId", userId)
+                .header("Content-Type", "application/json")
+                .pathParam("productName", YELLOW_CORE_WOOD_CHAIR)
+                .when()
+                .delete("{productName}")
+                .then()
+                .assertThat().statusCode(200);
+    }
+
+    @Test(dependsOnMethods = {"addProductsToUserFavorites"}, priority = 4)
+    void testGetAllUsers() {
+
+        given().header("Authorization", token)
+                .header("userId", userId)
+                .when().get()
+                .then().assertThat().statusCode(200)
+                .and().body("size()", is(3));
     }
 
     @AfterClass
