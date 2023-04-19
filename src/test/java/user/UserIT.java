@@ -1,6 +1,10 @@
 package user;
 
 import com.google.gson.JsonObject;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -11,6 +15,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
+@Epic("REST API testing for User endpoints")
 public class UserIT {
 
     static ConfigFileReader configReader = new ConfigFileReader();
@@ -23,12 +28,12 @@ public class UserIT {
     static void setUp() {
         //Set up the base URI
         RestAssured.baseURI = configReader.getBaseUrlUser();
-
     }
 
-
+    @Feature("Add user")
+    @Description("Testing 'addUser' endpoint, using default values")
     @Test(priority = 1)
-    void testAddUser() {
+    void addUser() {
         //generate random email when creating a new user
         email = generateEmail();
 
@@ -41,7 +46,8 @@ public class UserIT {
         jsonObj.addProperty("deliveryAddress", "street, no. 1");
 
         //create a new user
-        given().contentType(ContentType.JSON)
+        given().filter(new AllureRestAssured())
+                .contentType(ContentType.JSON)
                 .body(jsonObj.toString())
                 .when()
                 .post()
@@ -60,8 +66,10 @@ public class UserIT {
                 .then().statusCode(200).extract().header("Authorization");
     }
 
-    @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
-    void testUpdateUserByEmail() {
+    @Feature("Update user by email")
+    @Description("Testing 'updateUserByEmail' endpoint, using default values")
+    @Test(dependsOnMethods = {"addUser"}, priority = 2)
+    void updateUserByEmail() {
 
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("firstName", "updated_firstName");
@@ -69,7 +77,8 @@ public class UserIT {
         jsonObj.addProperty("phoneNumber", "0742000002");
         jsonObj.addProperty("deliveryAddress", "street, no. 2");
 
-        given().header("Authorization", token)
+        given().filter(new AllureRestAssured())
+                .header("Authorization", token)
                 .header("Content-Type", "application/json")
                 .pathParam("email", email)
                 .body(jsonObj.toString())
@@ -83,28 +92,37 @@ public class UserIT {
                 .and().statusCode(200);
     }
 
-    @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
-    void testGetUserByEmail() {
+    @Feature("Get user by email")
+    @Description("Testing 'getUserByEmail' endpoint, using default value")
+    @Test(dependsOnMethods = {"addUser"}, priority = 2)
+    void getUserByEmail() {
 
-        given().header("Authorization", token)
+        given().filter(new AllureRestAssured())
+                .header("Authorization", token)
                 .queryParam("email", email)
                 .when().get()
                 .then().assertThat().statusCode(200);
     }
 
-    @Test(dependsOnMethods = {"testAddUser"}, priority = 2)
-    void testGetAllUsers() {
+    @Feature("Get all users")
+    @Description("Testing 'getAllUsers' endpoint")
+    @Test(dependsOnMethods = {"addUser"}, priority = 2)
+    void getAllUsers() {
 
-        given().header("Authorization", token)
+        given().filter(new AllureRestAssured())
+                .header("Authorization", token)
                 .when().get("/users")
                 .then().assertThat().statusCode(200)
                 .and().body("size()", greaterThan(3));
     }
 
-    @Test(dependsOnMethods = {"testAddUser"}, priority = 3)
-    void testDeleteUserByEmail() {
+    @Feature("Delete user by email")
+    @Description("Testing 'deleteUserByEmail' endpoint")
+    @Test(dependsOnMethods = {"addUser"}, priority = 3)
+    void deleteUserByEmail() {
 
-        given().contentType(ContentType.JSON)
+        given().filter(new AllureRestAssured())
+                .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .header("Content-Type", "application/json")
                 .pathParam("email", email)

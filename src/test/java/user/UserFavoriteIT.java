@@ -1,6 +1,10 @@
 package user;
 
 import com.google.gson.JsonObject;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -15,6 +19,7 @@ import java.util.List;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
+@Epic("REST API testing for User Favorite endpoints")
 public class UserFavoriteIT {
 
     static ConfigFileReader configReader = new ConfigFileReader();
@@ -43,10 +48,13 @@ public class UserFavoriteIT {
         createNewUser();
     }
 
+    @Feature("Add product to user favorites")
+    @Description("Testing 'addProductToUserFavorites' endpoint, using default value")
     @Test(priority = 1)
     void addProductToUserFavorites() {
 
-        given().header("Authorization", token)
+        given().filter(new AllureRestAssured())
+                .header("Authorization", token)
                 .header("userId", userId)
                 .pathParam("productName", YELLOW_CORE_WOOD_CHAIR)
                 .when()
@@ -56,12 +64,15 @@ public class UserFavoriteIT {
                 .and().statusCode(200);
     }
 
+    @Feature("Add products to user favorites")
+    @Description("Testing 'addProductsToUserFavorites' endpoint, using default values")
     @Test(priority = 2)
     void addProductsToUserFavorites() {
 
         List<String> productNames = List.of(RED_CORE_WOOD_CHAIR, BLUE_CORE_WOOD_CHAIR, ORANGE_CORE_WOOD_CHAIR);
 
-        given().contentType(ContentType.JSON)
+        given().filter(new AllureRestAssured())
+                .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .header("userId", userId)
                 .body(productNames)
@@ -71,10 +82,13 @@ public class UserFavoriteIT {
                 .and().body("$", hasSize(greaterThan(2)));
     }
 
+    @Feature("Remove product from user favorites")
+    @Description("Testing 'removeProductFromUserFavorites' endpoint, using default value")
     @Test(dependsOnMethods = {"addProductToUserFavorites"}, priority = 3)
     void removeProductFromUserFavorites() {
 
-        given().contentType(ContentType.JSON)
+        given().filter(new AllureRestAssured())
+                .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .header("userId", userId)
                 .header("Content-Type", "application/json")
@@ -85,10 +99,13 @@ public class UserFavoriteIT {
                 .assertThat().statusCode(200);
     }
 
+    @Feature("getAllUsers")
+    @Description("Testing 'getAllUsers' endpoint")
     @Test(dependsOnMethods = {"addProductsToUserFavorites"}, priority = 4)
-    void testGetAllUsers() {
+    void getAllUsers() {
 
-        given().header("Authorization", token)
+        given().filter(new AllureRestAssured())
+                .header("Authorization", token)
                 .header("userId", userId)
                 .when().get()
                 .then().assertThat().statusCode(200)
@@ -99,7 +116,8 @@ public class UserFavoriteIT {
     public void afterClass() {
 
         //delete the user created for testing
-        given().contentType(ContentType.JSON)
+        given().filter(new AllureRestAssured())
+                .contentType(ContentType.JSON)
                 .header("Authorization", token)
                 .header("Content-Type", "application/json")
                 .pathParam("email", email)
