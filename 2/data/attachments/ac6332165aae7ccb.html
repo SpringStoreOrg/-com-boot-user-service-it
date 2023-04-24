@@ -1,0 +1,30 @@
+<div>PUT to https://spring-store-gateway-service.herokuapp.com/user/userFavorites/</div>
+
+<h4>Body</h4>
+<div>
+    <pre class="preformated-text">
+[
+    &quot;Red core wood chair&quot;,
+    &quot;Blue core wood chair&quot;,
+    &quot;Orange core wood chair&quot;
+]    </pre>
+</div>
+
+<h4>Headers</h4>
+<div>
+        <div>Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbIkFDQ0VTUyIsIkNSRUFURV9PUkRFUiJdLCJzdWIiOiJBdlZ0bDVVQ3kxSDBZYmNiYW5lRHBoSXVaQHNwcmluZ3N0b3JlLXRlc3QuY29tIiwiaWF0IjoxNjgyMzE4NDI4LCJleHAiOjE2ODIzMjU2MjgsImp0aSI6IjM2NSJ9.6j6Hx7umufGczljjrE-BObFziMT9GoAWz4fNyy2i30P_uI3dF2CzV_1INMHgad16h7uq1opXIt5EOp6BP8h6OA</div>
+        <div>Accept: */*</div>
+        <div>userId: 365</div>
+        <div>Content-Type: application/json</div>
+</div>
+
+
+
+<h4>Curl</h4>
+<div>
+curl -v -X PUT &#39;https://spring-store-gateway-service.herokuapp.com/user/userFavorites/&#39; -H &#39;Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbIkFDQ0VTUyIsIkNSRUFURV9PUkRFUiJdLCJzdWIiOiJBdlZ0bDVVQ3kxSDBZYmNiYW5lRHBoSXVaQHNwcmluZ3N0b3JlLXRlc3QuY29tIiwiaWF0IjoxNjgyMzE4NDI4LCJleHAiOjE2ODIzMjU2MjgsImp0aSI6IjM2NSJ9.6j6Hx7umufGczljjrE-BObFziMT9GoAWz4fNyy2i30P_uI3dF2CzV_1INMHgad16h7uq1opXIt5EOp6BP8h6OA&#39; -H &#39;Accept: */*&#39; -H &#39;userId: 365&#39; -H &#39;Content-Type: application/json&#39; -d &#39;[
+    &quot;Red core wood chair&quot;,
+    &quot;Blue core wood chair&quot;,
+    &quot;Orange core wood chair&quot;
+]&#39;
+</div>
