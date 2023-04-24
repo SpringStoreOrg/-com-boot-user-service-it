@@ -1,0 +1,1 @@
+{"total":2,"items":[{"uid":"14aa1163364de1d2ac629871412184b6","name":"REST API testing for User endpoints","statistic":{"failed":0,"broken":0,"skipped":0,"passed":5,"unknown":0,"total":5}},{"uid":"e6d8068cc7f50dbc482f98dcd710473a","name":"REST API testing for User Favorite endpoints","statistic":{"failed":0,"broken":0,"skipped":0,"passed":4,"unknown":0,"total":4}}]}
