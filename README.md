@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/SpringStoreOrg/com-boot-user-service-it.svg?style=shield)](https://app.circleci.com/pipelines/github/SpringStoreOrg/com-boot-user-service-it?branch=main) [![Maven](https://badgen.net/badge/icon/maven?icon=maven&label)](https://https://maven.apache.org/)
+[![Run Integration Tests](https://github.com/SpringStoreOrg/com-boot-user-service-it/actions/workflows/build-and-test.yaml/badge.svg)](https://github.com/SpringStoreOrg/com-boot-user-service-it/actions/workflows/build-and-test.yaml) [![Maven](https://badgen.net/badge/icon/maven?icon=maven&label)](https://https://maven.apache.org/)
 [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/Naereen/badges/)
 
 # Spring Store API Test Project
