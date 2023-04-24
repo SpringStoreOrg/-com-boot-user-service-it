@@ -14,7 +14,7 @@ jobs:
       - name: Remove old files and directories
         run: |
           pwd
-          ls -a
+          ls -la
           git init
           git remote add origin "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
           git config --global user.email "my-bot@bot.com"
@@ -23,9 +23,9 @@ jobs:
           git checkout gh-pages
           git branch --set-upstream-to=origin/gh-pages
           git pull
-          ls -a
+          ls -la
           echo $RANDOM >> random.txt
-          ls -a
+          ls -la
           git add -A
           git commit -m "Random file"
           git push
