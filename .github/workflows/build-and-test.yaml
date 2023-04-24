@@ -8,7 +8,7 @@ on:
       - "feature/github_actions"
 
 jobs:
-  run-selenium-tests:
+  integration-tests:
     runs-on: ubuntu-latest
     steps:
       # Checkout the code as the first step.
