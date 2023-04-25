@@ -46,3 +46,10 @@ Testing a simple response containing some JSON data.
 }
 ```
 - Status Code: 404 Not Found
+
+## Test Results
+in order to generate locally the
+[Allure Test Results](https://springstoreorg.github.io/com-boot-user-service-it/)
+, following command has to be run in the terminal: "allure serve {path to project}\target\allure-results"
+
+![Results UI](src/test/resources/img/image_testresults.png)
